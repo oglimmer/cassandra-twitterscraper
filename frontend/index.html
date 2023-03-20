@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <script src="index.js" defer></script>
+    <title>Scraper</title>
+</head>
+<body>
+    <h1 id="total"></h1>
+    <h2>Recently scraped</h2>
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>Tweets scraped</th>
+                <th>Time started</th>
+                <th>Time finished</th>
+                <th>Duration</th>
+            </tr>
+        </thead>
+        <tbody id="recent">
+        </tbody>
+    </table>
+    <h2>Scraper logs</h2>
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>Instance</th>
+                <th>Message</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody id="log">
+        </tbody>
+    </table>
+</body>
+</html>
