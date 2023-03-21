@@ -10,7 +10,9 @@ headers = {
 
 def getTask():
     res = requests.get(f"{REQUEST_URI}/gettask", headers=headers)
-    if res.status_code != 200: return None
+    if res.status_code != 200:
+        log(f"gettask failed. code {res.status_code}")
+        return None
     return res.json()
 
 def commitTask(task, amount):
@@ -18,5 +20,6 @@ def commitTask(task, amount):
     res = requests.post(f"{REQUEST_URI}/submit", json=task, headers=headers)
 
 def log(msg):
+    print(msg)
     tosend = {"msg": msg, "instance": INSTANCE_NAME}
     requests.post(f"{REQUEST_URI}/log", json=tosend, headers=headers)

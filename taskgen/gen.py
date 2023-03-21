@@ -1,3 +1,4 @@
+import os
 import mysql.connector, time
 from dotenv import load_dotenv
 load_dotenv()
@@ -6,7 +7,7 @@ START_TIME_UNIX = 1609455600
 END_TIME_UNIX = 1640991600
 TIME_PER_TASK = 3600
 COMPANY_INT = 1
-SEARCH_TERMS = []#["elon musk", "tesla"]
+SEARCH_TERMS = ["elon musk", "tesla"]
 
 def connectToDatabase():
     return mysql.connector.connect(
