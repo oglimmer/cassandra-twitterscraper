@@ -5,6 +5,7 @@ def searchTermsToString(search_terms):
     return '"'+'" OR "'.join(map(str, search_terms))+'"'
 def scrape(task, session, prepStatement):
     searchString = f'{searchTermsToString(task["search_terms"])} since:{task["unix_start"]} until:{task["unix_end"]}'
+    i = 0
     for amount,tweet in enumerate(sntwitter.TwitterSearchScraper(searchString).get_items()):
         values = [
             int(tweet.id),
@@ -17,4 +18,5 @@ def scrape(task, session, prepStatement):
             int(tweet.retweetCount)
         ]
         session.execute(prepStatement, values)
-    return amount+1
+        i+=1
+    return i

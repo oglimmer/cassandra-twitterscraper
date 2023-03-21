@@ -1,13 +1,12 @@
-import os
+import os, sys
 import mysql.connector, time
 from dotenv import load_dotenv
 load_dotenv()
 
-START_TIME_UNIX = 1609455600
-END_TIME_UNIX = 1640991600
-TIME_PER_TASK = 3600
+START_TIME_UNIX = time.time()
+END_TIME_UNIX = START_TIME_UNIX + 86400 # 1 day
+TIME_PER_TASK = 3600 # 1 hour
 COMPANY_INT = 1
-SEARCH_TERMS = ["elon musk", "tesla"]
 
 def connectToDatabase():
     return mysql.connector.connect(
@@ -21,14 +20,19 @@ def query(q, p, cnx):
     cursor.execute(q, p)
     cursor.close()
     cnx.commit()
-cnx = connectToDatabase()
 
-for t in SEARCH_TERMS:
-    query("INSERT INTO search_terms (company, term) VALUES (%s, %s)", [COMPANY_INT, t], cnx)
+if __name__ == '__main__':
 
-while START_TIME_UNIX < END_TIME_UNIX:
-    end = START_TIME_UNIX + TIME_PER_TASK
-    if end > END_TIME_UNIX: end = END_TIME_UNIX
-    query("INSERT INTO tasks (company, unix_start, unix_end) VALUES (%s, %s, %s);",
-        [COMPANY_INT, START_TIME_UNIX, end], cnx)
-    START_TIME_UNIX += TIME_PER_TASK
+    if os.getenv("INIT") != "True":
+
+        cnx = connectToDatabase()
+
+        for t in os.getenv("SEARCH_TERMS").split(','):
+            query("INSERT INTO search_terms (company, term) VALUES (%s, %s)", [COMPANY_INT, t], cnx)
+
+        while START_TIME_UNIX < END_TIME_UNIX:
+            end = START_TIME_UNIX + TIME_PER_TASK
+            if end > END_TIME_UNIX: end = END_TIME_UNIX
+            query("INSERT INTO tasks (company, unix_start, unix_end) VALUES (%s, %s, %s);",
+                [COMPANY_INT, START_TIME_UNIX, end], cnx)
+            START_TIME_UNIX += TIME_PER_TASK

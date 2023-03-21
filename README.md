@@ -1,10 +1,17 @@
 
 # setup
 
-* start `docker compose up --build cassandra_node1 cassandra_node2 cassandra_setup` and wait
-* start `docker compose up --build mariadb` and wait
-* start `docker compose up --build tasks_api stats_api frontend` and wait
-* start `docker compose up --build taskgen` ONLY ONCE!
-* start `docker compose up --build scraper`
+* start `docker compose up --build -d`
+* wait until all comomponents are up. Check via `docker compose logs -f` - this might take several minutes.
+
+# init
+
+* use `SEARCH_TERMS="tesla,elon-musk" INIT=false docker compose up --build taskgen` to create the search terms for tesla and elon-musk
+
+# start the scraper
+
+* use `docker compose up --build -d scraper`
+
+# UI
 
 Go to http://localhost/

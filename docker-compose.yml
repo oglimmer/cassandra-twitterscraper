@@ -49,6 +49,8 @@ services:
   taskgen:
     build: taskgen
     environment:
+      - "INIT=${INIT:-True}"
+      - "SEARCH_TERMS=${SEARCH_TERMS:-}"
       - DATABASEUSR=twitterscraperuser
       - DATABASEPW=twitterscraperpass
       - DBHOST=mariadb
@@ -71,5 +73,5 @@ services:
       - MARIADB_ROOT_PASSWORD=twitterscraperrootpass
       - MARIADB_DATABASE=twitterscraper
     volumes:
-      - ./tasks-api:/docker-entrypoint-initdb.d
+      - ./tasks-api/setup.sql:/docker-entrypoint-initdb.d/setup.sql
       - ./mariadb:/var/lib/mysql

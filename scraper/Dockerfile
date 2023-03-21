@@ -1,6 +1,6 @@
 FROM python
 
-RUN pip install snscrape cassandra-driver
+RUN pip install snscrape cassandra-driver && apt update && apt -y install netcat
 
 COPY . /opt/app
 
@@ -29,4 +29,5 @@ RUN echo "\"table\": \"$table\"" >> conf.json
 
 RUN echo "}" >> conf.json
 
+ENTRYPOINT ["./entrypoint.sh"]
 CMD ["python", "main.py"]
