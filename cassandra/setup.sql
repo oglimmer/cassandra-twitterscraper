@@ -1,4 +1,4 @@
-CREATE  KEYSPACE IF NOT EXISTS scraper WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1} 
+CREATE  KEYSPACE IF NOT EXISTS scraper WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1};
 
 CREATE TABLE scraper.tweets (
     id bigint,

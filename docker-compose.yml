@@ -1,0 +1,75 @@
+version: "3.9"
+
+services:
+  cassandra_node1:
+    image: cassandra:latest
+    volumes:
+      - ./cassandra_node1:/var/lib/cassandra
+    environment:
+      - CASSANDRA_CLUSTER_NAME=cassandra_cluster
+      - CASSANDRA_BROADCAST_ADDRESS=cassandra_node1
+  cassandra_node2:
+    image: cassandra:latest
+    volumes:
+      - ./cassandra_node2:/var/lib/cassandra
+    environment:
+      - CASSANDRA_CLUSTER_NAME=cassandra_cluster
+      - CASSANDRA_BROADCAST_ADDRESS=cassandra_node2
+      - CASSANDRA_SEEDS=cassandra_node1
+  cassandra_setup:
+    build: cassandra
+  frontend:
+    image: nginx
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+    ports:
+      - 80:80
+  scraper:
+    build:
+      context: scraper
+      args:
+        - API_url=http://tasks_api:3000/api
+        - API_secret=foobar
+        - instance_name=instance1
+        - user=u
+        - password=p
+        - servers=["cassandra_node1"]
+        - keyspace=scraper
+        - table=tweets
+  stats_api:
+    build:
+      context: stats-api
+      args:
+        - host=mariadb
+        - user=twitterscraperuser
+        - password=twitterscraperpass
+        - database=twitterscraper
+    ports:
+      - 3000:3000
+  taskgen:
+    build: taskgen
+    environment:
+      - DATABASEUSR=twitterscraperuser
+      - DATABASEPW=twitterscraperpass
+      - DBHOST=mariadb
+      - DBNAME=twitterscraper
+  tasks_api:
+    build: tasks-api
+    environment:
+      - DATABASEUSR=twitterscraperuser
+      - DATABASEPW=twitterscraperpass
+      - DBHOST=mariadb
+      - DBNAME=twitterscraper
+      - APIHOST=0.0.0.0
+      - APIPORT=3000
+      - SECRET=foobar
+  mariadb:
+    image: mariadb
+    environment:
+      - MARIADB_USER=twitterscraperuser
+      - MARIADB_PASSWORD=twitterscraperpass
+      - MARIADB_ROOT_PASSWORD=twitterscraperrootpass
+      - MARIADB_DATABASE=twitterscraper
+    volumes:
+      - ./tasks-api:/docker-entrypoint-initdb.d
+      - ./mariadb:/var/lib/mysql

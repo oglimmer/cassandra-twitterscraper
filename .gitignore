@@ -2,3 +2,6 @@ __pycache__
 node_modules
 .env
 conf.json
+cassandra_node1
+cassandra_node2
+mariadb
